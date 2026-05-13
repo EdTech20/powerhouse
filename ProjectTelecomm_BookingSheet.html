@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Powerhouse Casting — Booking Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0e0c;
+    --ink2: #3d3a35;
+    --ink3: #7a7570;
+    --rule: #e2ddd8;
+    --rule2: #f0ece8;
+    --cream: #faf8f5;
+    --white: #ffffff;
+    --gold: #b8960c;
+    --gold-light: #f5f0e0;
+    --red: #c0392b;
+    --red-light: #fdf0ee;
+    --green: #1a6b3a;
+    --green-light: #edf7f1;
+    --blue: #1a4a8a;
+    --blue-light: #eef3fb;
+  }
+
+  body {
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── Print styles ── */
+  @media print {
+    body { background: white; }
+    .no-print { display: none !important; }
+    .page { box-shadow: none; margin: 0; border-radius: 0; }
+    .performer-card { break-inside: avoid; }
+  }
+
+  /* ── Page wrapper ── */
+  .page {
+    max-width: 900px;
+    margin: 40px auto;
+    background: var(--white);
+    box-shadow: 0 4px 40px rgba(0,0,0,0.10);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .doc-header {
+    background: var(--ink);
+    color: var(--white);
+    padding: 40px 56px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .doc-header::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 300px; height: 100%;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.04));
+  }
+  .agency-tag {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-family: 'DM Mono', monospace;
+  }
+  .agency-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .agency-address {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+  }
+  .agency-address a { color: rgba(255,255,255,0.6); text-decoration: none; }
+  .doc-title-bar {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .doc-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: rgba(255,255,255,0.95);
+    font-style: italic;
+  }
+  .doc-date {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  /* ── Production block ── */
+  .production-block {
+    padding: 36px 56px;
+    border-bottom: 2px solid var(--rule);
+    background: var(--white);
+  }
+  .prod-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .prod-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule2);
+  }
+  .prod-item.full { grid-column: span 2; }
+  .prod-item:last-child, .prod-item.full:last-child { border-bottom: none; }
+  .prod-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 5px;
+    font-family: 'DM Mono', monospace;
+  }
+  .prod-value {
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .prod-value.large {
+    font-size: 22px;
+    font-family: 'DM Serif Display', serif;
+    color: var(--ink);
+  }
+  .prod-value.mono {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--ink2);
+  }
+
+  /* ── Rates block ── */
+  .rates-block {
+    background: var(--gold-light);
+    border-left: 4px solid var(--gold);
+    margin: 0 56px 0;
+    padding: 20px 24px;
+    border-radius: 0 4px 4px 0;
+    display: flex;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  .rate-item {
+    flex: 1;
+    min-width: 140px;
+    padding: 0 20px;
+    border-right: 1px solid rgba(184,150,12,0.25);
+  }
+  .rate-item:first-child { padding-left: 0; }
+  .rate-item:last-child { border-right: none; }
+  .rate-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+  .rate-value {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    font-family: 'DM Serif Display', serif;
+  }
+
+  /* ── Usage block ── */
+  .usage-block {
+    margin: 20px 56px 0;
+    padding: 20px 24px;
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue);
+    border-radius: 0 4px 4px 0;
+  }
+  .usage-title {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+  .usage-text {
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.7;
+  }
+
+  /* ── Conflicts block ── */
+  .conflicts-block {
+    margin: 20px 56px 36px;
+    padding: 20px 24px;
+    background: var(--red-light);
+    border-left: 4px solid var(--red);
+    border-radius: 0 4px 4px 0;
+  }
+  .conflicts-title {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+  .conflicts-text {
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.7;
+  }
+
+  /* ── Performers section ── */
+  .performers-header {
+    background: var(--ink);
+    padding: 14px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .performers-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+  }
+  .performers-count {
+    font-size: 11px;
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-weight: 600;
+  }
+
+  /* ── Performer card ── */
+  .performer-card {
+    padding: 32px 56px;
+    border-bottom: 2px solid var(--rule);
+    position: relative;
+  }
+  .performer-card:last-child { border-bottom: none; }
+  .performer-card:nth-child(even) { background: var(--cream); }
+
+  .performer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .performer-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+  .performer-role {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+  }
+  .performer-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px;
+    color: var(--rule);
+    line-height: 1;
+    user-select: none;
+  }
+
+  .performer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+  .perf-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule2);
+    padding-right: 24px;
+  }
+  .perf-item.full { grid-column: span 3; }
+  .perf-item.half { grid-column: span 1; }
+  .perf-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+  .perf-value {
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .perf-value a {
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 13px;
+  }
+  .perf-value.muted { color: var(--ink3); font-style: italic; font-size: 13px; }
+
+  /* ── Agent section within card ── */
+  .agent-strip {
+    margin-top: 16px;
+    background: var(--ink);
+    border-radius: 4px;
+    padding: 14px 20px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+  .agent-tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+  }
+  .agent-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .agent-email {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    font-family: 'DM Mono', monospace;
+  }
+  .agent-email a { color: rgba(255,255,255,0.6); text-decoration: none; }
+
+  /* ── Footer ── */
+  .doc-footer {
+    background: var(--rule2);
+    padding: 20px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--rule);
+  }
+  .footer-note {
+    font-size: 11px;
+    color: var(--ink3);
+    font-family: 'DM Mono', monospace;
+  }
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 14px;
+    color: var(--ink3);
+  }
+
+  /* ── Print / export button ── */
+  .toolbar {
+    max-width: 900px;
+    margin: 0 auto 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 0 4px;
+  }
+  .toolbar button {
+    background: var(--ink);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.2px;
+  }
+  .toolbar button:hover { background: #2a2826; }
+  .toolbar button.secondary {
+    background: transparent;
+    color: var(--ink2);
+    border: 1.5px solid var(--rule);
+  }
+
+  /* ── Wardrobe pills ── */
+  .wardrobe-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .w-pill {
+    background: var(--rule2);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── Status badge ── */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-light);
+    color: var(--green);
+    border: 1px solid rgba(26,107,58,0.2);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+  }
+  .status-badge.pending {
+    background: var(--gold-light);
+    color: var(--gold);
+    border-color: rgba(184,150,12,0.2);
+  }
+
+  /* ── Divider label ── */
+  .section-rule {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 12px;
+  }
+  .section-rule-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ink3);
+    white-space: nowrap;
+    font-family: 'DM Mono', monospace;
+  }
+  .section-rule-line {
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <button class="secondary" onclick="window.print()">🖨 Print</button>
+  <button onclick="window.print()">↓ Save as PDF</button>
+</div>
+
+<div class="page">
+
+  <!-- ── HEADER ── -->
+  <div class="doc-header">
+    <div class="agency-tag">Talent Booking Confirmation</div>
+    <div class="agency-name">Powerhouse Casting</div>
+    <div class="agency-address">
+      21 Randolph Ave, Suite 204 · Toronto, Ontario M6P 4G4<br>
+      <a href="http://www.powerhousecasting.com">www.powerhousecasting.com</a>
+    </div>
+    <div class="doc-title-bar">
+      <div class="doc-title">Project Telecomm</div>
+      <div class="doc-date">Issued: May 5, 2026</div>
+    </div>
+  </div>
+
+  <!-- ── PRODUCTION DETAILS ── -->
+  <div class="production-block">
+    <div class="prod-grid">
+      <div class="prod-item">
+        <div class="prod-label">Production</div>
+        <div class="prod-value large">Project Telecomm</div>
+      </div>
+      <div class="prod-item">
+        <div class="prod-label">Wardrobe / Fitting</div>
+        <div class="prod-value">Wednesday, May 7, 2026</div>
+      </div>
+      <div class="prod-item">
+        <div class="prod-label">Shoot Date</div>
+        <div class="prod-value">May 8 or 9, 2026</div>
+      </div>
+      <div class="prod-item">
+        <div class="prod-label">Agency Fee</div>
+        <div class="prod-value">15% Applicable</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RATES ── -->
+  <div class="rates-block">
+    <div class="rate-item">
+      <div class="rate-label">Session</div>
+      <div class="rate-value">$600</div>
+    </div>
+    <div class="rate-item">
+      <div class="rate-label">Fitting</div>
+      <div class="rate-value">$75</div>
+    </div>
+    <div class="rate-item">
+      <div class="rate-label">Buyout</div>
+      <div class="rate-value">$4,500</div>
+    </div>
+    <div class="rate-item">
+      <div class="rate-label">Travel (Vancouver)</div>
+      <div class="rate-value">$400</div>
+    </div>
+  </div>
+
+  <!-- ── USAGE ── -->
+  <div class="usage-block">
+    <div class="usage-title">Market / Usage Terms</div>
+    <div class="usage-text">
+      1 year from 1st airdate. Option for 1 additional year. Option: WW use for broadcast, streaming and paid social.<br>
+      Broadcast TV, streaming and paid social in the US for one year.<br>
+      Internet, new media, industrial and organic social Worldwide for one year.<br>
+      All materials derived from shoot, including unlimited edits, lifts, versions, cut-downs, tags, screen grabs, digital assets, B-roll, PR materials.
+    </div>
+  </div>
+
+  <!-- ── CONFLICTS ── -->
+  <div class="conflicts-block">
+    <div class="conflicts-title">⚠ Conflicts</div>
+    <div class="conflicts-text">
+      <strong>All Talent:</strong> Wireless (Telecommunication)<br>
+      <strong>Jenny only:</strong> Wireless (Telecommunication) and any FIFA-related advertising focusing on the World Cup
+    </div>
+  </div>
+
+  <!-- ── PERFORMERS HEADER ── -->
+  <div class="performers-header">
+    <div class="performers-title">Booked Performers</div>
+    <div class="performers-count">6 Talent Confirmed</div>
+  </div>
+
+  <!-- ── PERFORMER 1 ── -->
+  <div class="performer-card">
+    <div class="performer-top">
+      <div>
+        <div class="performer-name">Monica Marie Yanagida Skipper</div>
+        <div class="performer-role">Role: Jenny</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="status-badge">✓ Confirmed</span>
+        <div class="performer-number">01</div>
+      </div>
+    </div>
+    <div class="performer-grid">
+      <div class="perf-item">
+        <div class="perf-label">Contact Number</div>
+        <div class="perf-value">604-328-8129</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Date of Birth</div>
+        <div class="perf-value">February 26, 1992</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Location</div>
+        <div class="perf-value">Vancouver, BC</div>
+      </div>
+      <div class="perf-item full">
+        <div class="perf-label">Home Address</div>
+        <div class="perf-value">903 Richards St, Vancouver, BC  V6B 3B6</div>
+      </div>
+      <div class="perf-item full">
+        <div class="perf-label">Email</div>
+        <div class="perf-value"><a href="mailto:getbizzybookings@hotmail.com">getbizzybookings@hotmail.com</a></div>
+      </div>
+    </div>
+    <div class="agent-strip">
+      <div class="agent-tag">Agent</div>
+      <div>
+        <div class="agent-name">Aaron @ Trisko Talent</div>
+        <div class="agent-email"><a href="mailto:aaron@triskotalent.com">aaron@triskotalent.com</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PERFORMER 2 ── -->
+  <div class="performer-card">
+    <div class="performer-top">
+      <div>
+        <div class="performer-name">Filipe Dimas</div>
+        <div class="performer-role">Role: Marcus</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="status-badge">✓ Confirmed</span>
+        <div class="performer-number">02</div>
+      </div>
+    </div>
+    <div class="performer-grid">
+      <div class="perf-item">
+        <div class="perf-label">Contact Number</div>
+        <div class="perf-value">416-500-8165</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Date of Birth</div>
+        <div class="perf-value muted">Not provided</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Location</div>
+        <div class="perf-value">Toronto, ON</div>
+      </div>
+      <div class="perf-item full">
+        <div class="perf-label">Email</div>
+        <div class="perf-value"><a href="mailto:filipe_dimas@hotmail.com">filipe_dimas@hotmail.com</a></div>
+      </div>
+    </div>
+    <div class="agent-strip">
+      <div class="agent-tag">Agent</div>
+      <div>
+        <div class="agent-name">Shelley @ Ambition Talent</div>
+        <div class="agent-email"><a href="mailto:shelley@ambitiontalent.com">shelley@ambitiontalent.com</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PERFORMER 3 ── -->
+  <div class="performer-card">
+    <div class="performer-top">
+      <div>
+        <div class="performer-name">Mark Curtin</div>
+        <div class="performer-role">Role: Dave</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="status-badge">✓ Confirmed</span>
+        <div class="performer-number">03</div>
+      </div>
+    </div>
+    <div class="performer-grid">
+      <div class="perf-item">
+        <div class="perf-label">Contact Number</div>
+        <div class="perf-value">778-891-4971</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Date of Birth</div>
+        <div class="perf-value">February 1, 1980</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Location</div>
+        <div class="perf-value">North Vancouver, BC</div>
+      </div>
+      <div class="perf-item full">
+        <div class="perf-label">Home Address</div>
+        <div class="perf-value">4122 Fairway Place, North Vancouver, BC  V7G 1Y7</div>
+      </div>
+      <div class="perf-item full">
+        <div class="perf-label">Email</div>
+        <div class="perf-value"><a href="mailto:markacurtin@gmail.com">markacurtin@gmail.com</a></div>
+      </div>
+    </div>
+    <div class="agent-strip">
+      <div class="agent-tag">Agent</div>
+      <div>
+        <div class="agent-name">Candace @ Integral Artists</div>
+        <div class="agent-email"><a href="mailto:cfulton@integralartists.com">cfulton@integralartists.com</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PERFORMER 4 ── -->
+  <div class="performer-card">
+    <div class="performer-top">
+      <div>
+        <div class="performer-name">Paul Smith</div>
+        <div class="performer-role">Role: Ben</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="status-badge">✓ Confirmed</span>
+        <div class="performer-number">04</div>
+      </div>
+    </div>
+    <div class="performer-grid">
+      <div class="perf-item">
+        <div class="perf-label">Contact Number</div>
+        <div class="perf-value">613-981-7066</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Date of Birth</div>
+        <div class="perf-value muted">Not provided</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Location</div>
+        <div class="perf-value">Ottawa, ON</div>
+      </div>
+      <div class="perf-item full">
+        <div class="perf-label">Email</div>
+        <div class="perf-value"><a href="mailto:paul.cec.smith@gmail.com">paul.cec.smith@gmail.com</a></div>
+      </div>
+    </div>
+    <div class="agent-strip">
+      <div class="agent-tag">Agent</div>
+      <div>
+        <div class="agent-name">Jessica @ 10 Talent Management</div>
+        <div class="agent-email"><a href="mailto:info@10talentmanagement.com">info@10talentmanagement.com</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PERFORMER 5 ── -->
+  <div class="performer-card">
+    <div class="performer-top">
+      <div>
+        <div class="performer-name">Peter Joseph</div>
+        <div class="performer-role">Role: Team</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="status-badge">✓ Confirmed</span>
+        <div class="performer-number">05</div>
+      </div>
+    </div>
+    <div class="performer-grid">
+      <div class="perf-item">
+        <div class="perf-label">Contact Number</div>
+        <div class="perf-value">647-286-7903</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Date of Birth</div>
+        <div class="perf-value muted">Not provided</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Location</div>
+        <div class="perf-value">Toronto, ON</div>
+      </div>
+      <div class="perf-item full">
+        <div class="perf-label">Email</div>
+        <div class="perf-value"><a href="mailto:peterjosephcomedy@outlook.com">peterjosephcomedy@outlook.com</a></div>
+      </div>
+    </div>
+    <div class="agent-strip">
+      <div class="agent-tag">Agent</div>
+      <div>
+        <div class="agent-name">Melissa @ Film Comm Talent</div>
+        <div class="agent-email"><a href="mailto:agents@filmcomm.ca">agents@filmcomm.ca</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PERFORMER 6 ── -->
+  <div class="performer-card">
+    <div class="performer-top">
+      <div>
+        <div class="performer-name">Maggie Grant</div>
+        <div class="performer-role">Role: Team</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="status-badge">✓ Confirmed</span>
+        <div class="performer-number">06</div>
+      </div>
+    </div>
+    <div class="performer-grid">
+      <div class="perf-item">
+        <div class="perf-label">Contact Number</div>
+        <div class="perf-value">705-768-6247</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Date of Birth</div>
+        <div class="perf-value muted">Not provided</div>
+      </div>
+      <div class="perf-item">
+        <div class="perf-label">Location</div>
+        <div class="perf-value">Ontario</div>
+      </div>
+      <div class="perf-item full">
+        <div class="perf-label">Email</div>
+        <div class="perf-value"><a href="mailto:maggiegrant333@gmail.com">maggiegrant333@gmail.com</a></div>
+      </div>
+    </div>
+    <div class="agent-strip">
+      <div class="agent-tag">Agent</div>
+      <div>
+        <div class="agent-name">Yanick @ Newton Landry Management</div>
+        <div class="agent-email"><a href="mailto:yanick@newtonlandry.com">yanick@newtonlandry.com</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <div class="doc-footer">
+    <div class="footer-note">Confidential — For production use only · © 2026 Powerhouse Casting</div>
+    <div class="footer-logo">Powerhouse Casting</div>
+  </div>
+
+</div>
+</body>
+</html>
