@@ -731,7 +731,8 @@ function JobModal({ onClose, onSave, existing, templates, onSaveTemplate }) {
   const [f, setF] = useState(existing || { title: "", client: "", category: "", shootDateStart: "", shootDateEnd: "", usageTerms: "", isActra: "" });
   const [showSaveTemplate, setShowSaveTemplate] = useState(false);
   const s = k => v => setF(p => ({ ...p, [k]: v }));
-  const ok = f.title && f.client && f.category && f.shootDateStart;
+  const isValidDateRange = !f.shootDateEnd || f.shootDateEnd >= f.shootDateStart;
+  const ok = f.title && f.client && f.category && f.shootDateStart && isValidDateRange;
   const shootDate = f.shootDateEnd && f.shootDateEnd !== f.shootDateStart ? `${f.shootDateStart} – ${f.shootDateEnd}` : f.shootDateStart;
 
   function applyTemplate(t) {
@@ -759,10 +760,11 @@ function JobModal({ onClose, onSave, existing, templates, onSaveTemplate }) {
           <Field label="Brand Category *" val={f.category} onChange={s("category")} placeholder="e.g. Athletic Footwear" />
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 18 }}>
-          <div style={S.fg}><label style={S.label}>Shoot Start Date *</label><input style={S.input} type="date" value={f.shootDateStart} onChange={e => s("shootDateStart")(e.target.value)} /></div>
-          <div style={S.fg}><label style={S.label}>Shoot End Date</label><input style={S.input} type="date" value={f.shootDateEnd} onChange={e => s("shootDateEnd")(e.target.value)} /></div>
+          <div style={S.fg}><label style={S.label}>Shoot Start Date *</label><input style={S.input} type="date" value={f.shootDateStart || ""} onChange={e => s("shootDateStart")(e.target.value)} /></div>
+          <div style={S.fg}><label style={S.label}>Shoot End Date</label><input style={{...S.input, borderColor: isValidDateRange ? S.input.borderColor : "#ff3b30"}} type="date" value={f.shootDateEnd || ""} onChange={e => s("shootDateEnd")(e.target.value)} /></div>
           <Sel label="Union Type" val={f.isActra} onChange={s("isActra")} opts={["ACTRA","Non-Union","Mixed","UBCP/ACTRA","UDA"]} />
         </div>
+        {!isValidDateRange && <div style={{color: "#ff3b30", fontSize: 13, marginTop: -12, marginBottom: 16}}>End date cannot be before start date.</div>}
         <Field label="Market / Usage Terms" val={f.usageTerms} onChange={s("usageTerms")} placeholder="e.g. National Broadcast + Digital, Canada, 1 year" />
         {onSaveTemplate && (
           <div style={{ marginBottom: 16 }}>
